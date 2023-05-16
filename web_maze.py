@@ -1,5 +1,4 @@
 from flask import Flask, redirect, url_for, request
-from time import sleep
 
 maze = {"A": ["B"],
         "B": ["A","C","D"],
