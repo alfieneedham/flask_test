@@ -15,19 +15,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <div class="container">
-        <h4>You are at vertex D</h4>
+        <h4>You are at vertex {{vertex}}</h4>
         <p>You can travel to:</p>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col s4" style="text-align: center;"><a href="http://www.google.co.uk"><button name="submit" type="submit" class="btn-floating btn-large waves-effect">A</button></a></div>
-            <div class="col s4" style="text-align: center;"><button name="submit" type="submit" class="btn-floating btn-large waves-effect">B</button></div>
-            <div class="col s4" style="text-align: center;"><button name="submit" type="submit" class="btn-floating btn-large waves-effect">C</button></div>
+            {% for neighbour in neighbours %}
+                <div class="col s2" style="text-align: center;"><a href="/traverse/{{neighbour}}" name="submit" type="submit" class="btn-floating btn-large waves-effect">{{neighbour}}</a></div>
+            {% endfor %}
         </div>
         <div class="divider"></div>
     </div>    
     
-
-
 </body>
 </html>
