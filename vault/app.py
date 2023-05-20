@@ -14,7 +14,63 @@ class User():
         self.realname = realname
         self.username = username
         self.password = password
+        
+class LoginForm(FlaskForm):
+    username = StringField("username")
+    password = StringField("password")
+    submit = StringField("submit")
+    
+class RegisterForm(FlaskForm):
+    realname = StringField("name")
+    username = StringField("username")
+    password = StringField("password")
+    password2 = StringField("password2")
+    accesscode = StringField("accesscode")
+    submit = StringField("submit")
 
 @app.route('/')
 def index():
-    return redirect(url_for('welcome'))
+    username = session.get('username', None)
+    if username is not None:
+        return(render_template("welcome.html", realname = users[username].realname))
+    else:
+        return(redirect(url_for("login")))
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form=RegisterForm()
+    if form.is_submitted():
+        realname=form.realname.data
+        username=form.username.data
+        password=form.password.data
+        password2=form.password2.data
+        accesscode=form.accesscode.data
+        
+        if str(accesscode) == ACCESS_CODE and password == password2 and username not in users:
+            new_user = User(realname, username, password)
+            users[username] = new_user
+            return(redirect(url_for("login")))
+        else:
+            return(render_template("register.html", form=form))
+    else:
+        return(render_template("register.html", form=form))
+    
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.is_submitted():
+        username=form.username.data
+        password=form.password.data
+        user_info = users.get(username, None)
+        if user_info is not None and user_info.password == password:
+            session["username"] = username
+            return(redirect(url_for("index")))
+        else:
+            return render_template("login.html", form=form)
+    else:
+        return(render_template("login.html", form=form))
+    
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return(redirect(url_for("login")))

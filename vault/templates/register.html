@@ -14,12 +14,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>   
 
     <nav>
-        <div class="nav-wrapper blue-grey darken-3 teal-text text-lighten-4">
-          <a href="welcome.html" class="brand-logo center">The Vault</a>
+        <div class="nav-wrapper blue-grey darken-3">
+          <a href="/" class="brand-logo center">The Vault</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="welcome.html">Home</a></li>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="login.html">Login</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a href="/login">Login</a></li>
           </ul>
         </div>
       </nav>
@@ -40,15 +40,15 @@
             </div>
             <div class="input-field">
                 <label for="password_confirmation">Re-Enter Password: </label>
-                <input name="password_confirm" id="password_confirmation" type="password">
+                <input name="password2" id="password2_input" type="password">
             </div>
             <div class="input-field">
                 <label for="code_input">Access Code: </label>
-                <input name="code" id="code_input" type="password">
+                <input name="accesscode" id="accesscode_input" type="text">
             </div>
             <button name="submit" type="submit" class="btn btn-primary blue-grey darken-3">Register</button>
         </form>
-        <h6>Already a member? <a href="login.html" class="waves-effect waves-teal btn-flat">Log in here.</a></h6>
+        <h6>Already a member? <a href="/login" class="waves-effect waves-teal btn-flat">log in here</a></h6>
       </div>
 
 </body>
