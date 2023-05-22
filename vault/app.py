@@ -21,7 +21,7 @@ class LoginForm(FlaskForm):
     submit = StringField("submit")
     
 class RegisterForm(FlaskForm):
-    realname = StringField("name")
+    realname = StringField("realname")
     username = StringField("username")
     password = StringField("password")
     password2 = StringField("password2")
@@ -32,12 +32,18 @@ class RegisterForm(FlaskForm):
 def index():
     username = session.get('username', None)
     if username is not None:
+        print(username)
+        print (users[username].realname)
         return(render_template("welcome.html", realname = users[username].realname))
     else:
         return(redirect(url_for("login")))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if session.get('username', None) is None:
+        loggedin = False
+    else:
+        loggedin = True
     form=RegisterForm()
     if form.is_submitted():
         realname=form.realname.data
@@ -51,12 +57,16 @@ def register():
             users[username] = new_user
             return(redirect(url_for("login")))
         else:
-            return(render_template("register.html", form=form))
+            return(render_template("register.html", form=form, loggedin=loggedin))
     else:
-        return(render_template("register.html", form=form))
+        return(render_template("register.html", form=form, loggedin=loggedin))
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get('username', None) is None:
+        loggedin = False
+    else:
+        loggedin = True
     form = LoginForm()
     if form.is_submitted():
         username=form.username.data
@@ -66,9 +76,9 @@ def login():
             session["username"] = username
             return(redirect(url_for("index")))
         else:
-            return render_template("login.html", form=form)
+            return render_template("login.html", form=form, loggedin=loggedin)
     else:
-        return(render_template("login.html", form=form))
+        return(render_template("login.html", form=form, loggedin=loggedin))
     
 @app.route("/logout")
 def logout():

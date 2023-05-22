@@ -19,7 +19,11 @@
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
             <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
+            {% if loggedin %}
+              <li><a href="/logout">Logout</a></li>
+            {% else %}
+              <li><a href="/login">Login</a></li>
+            {% endif %}
           </ul>
         </div>
       </nav>
@@ -27,8 +31,8 @@
       <div class="container">
         <form action="" method="POST" class="form-inline">
             <div class="input-field">
-                <label for="name_input">Real Name: </label>
-                <input name="name" id="name_input" type="text">
+                <label for="realname_input">Real Name: </label>
+                <input name="realname" id="realname_input" type="text">
             </div>
             <div class="input-field">
                 <label for="username_input">Username: </label>
