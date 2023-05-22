@@ -5,7 +5,7 @@ import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='dgjsdfj6gfdj'
-conn = sqlite3.connect('vault/users.db')
+conn = sqlite3.connect('vault/users.db', check_same_thread=False)
 
 ACCESS_CODE = "42"
         
@@ -33,10 +33,12 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
     if session.get('username', None) is None:
         loggedin = False
     else:
         loggedin = True
+
     form=RegisterForm()
     if form.is_submitted():
         realname=form.realname.data
@@ -45,13 +47,12 @@ def register():
         password2=form.password2.data
         accesscode=form.accesscode.data
         
-        if str(accesscode) == ACCESS_CODE and password == password2:
-            
+        if str(accesscode) == ACCESS_CODE and password == password2: 
             cur = conn.cursor()
             cur.execute('''SELECT USERNAME
-                            FROM USERSDB
-                            WHERE USERNAME=?''',
-                            (username))
+                        FROM USERSDB
+                        WHERE USERNAME=?''',
+                        [username])
             result = cur.fetchone()
 
             if not result:
@@ -59,6 +60,7 @@ def register():
                                 VALUES (?,?,?)''', [username, realname, password])
                 conn.commit()
                 return(redirect(url_for("login")))
+            
             else:
                 return(render_template("register.html", form=form, loggedin=loggedin))      
         else:
@@ -72,11 +74,17 @@ def login():
         loggedin = False
     else:
         loggedin = True
+
     form = LoginForm()
     if form.is_submitted():
         username=form.username.data
         password=form.password.data
         user_info = users.get(username, None)
+
+        # CHECK sqltest FOR LOGIN CHECK THING
+        # CHECK sqltest FOR LOGIN CHECK THING
+        # CHECK sqltest FOR LOGIN CHECK THING
+
         if user_info is not None and user_info.password == password:
             session["username"] = username
             return(redirect(url_for("index")))
@@ -89,3 +97,6 @@ def login():
 def logout():
     del session["username"]
     return(redirect(url_for("login")))
+
+if __name__ == "__main__":
+    app.run()

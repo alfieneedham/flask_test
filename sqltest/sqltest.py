@@ -1,18 +1,35 @@
 import sqlite3
 
+username = "ADMIN"
+
 # conn.execute('''CREATE TABLE USERSDB
 #          (USERNAME TEXT PRIMARY KEY     NOT NULL,
 #          REALNAME       TEXT    NOT NULL,
 #          PASSWORD       TEXT    NOT NULL);''')
 
 conn = sqlite3.connect('vault/users.db')
-print ("Opened database successfully")
+print ("Opened database successfully", "\n")
 
-cursor = conn.execute("SELECT USERNAME, REALNAME, PASSWORD from USERSDB")
-for row in cursor:
-   print("USERNAME = ", row[0])
-   print("REALNAME = ", row[1])
-   print("PASSWORD = ", row[2], "\n")
+# cursor = conn.execute("SELECT USERNAME, REALNAME, PASSWORD FROM USERSDB")
+# for row in cursor:
+#    print("USERNAME = ", row[0])
+#    print("REALNAME = ", row[1])
+#    print("PASSWORD = ", row[2], "\n")
+# print ("Operation done successfully")
 
-print ("Operation done successfully")
+cur = conn.cursor()
+
+cur.execute("SELECT USERNAME FROM USERSDB WHERE USERNAME=?",[username])
+
+result = cur.fetchone()
+
+print(*result)
+
+if "ADMIN" == str(*result):
+    print(True)
+else:
+    print(False)
+
+
+
 conn.close()
