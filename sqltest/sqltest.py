@@ -1,6 +1,6 @@
 import sqlite3
 
-username = "ADMIN"
+username = "ADMINN"
 
 # conn.execute('''CREATE TABLE USERSDB
 #          (USERNAME TEXT PRIMARY KEY     NOT NULL,
@@ -12,23 +12,19 @@ print ("Opened database successfully", "\n")
 
 # cursor = conn.execute("SELECT USERNAME, REALNAME, PASSWORD FROM USERSDB")
 # for row in cursor:
-#    print("USERNAME = ", row[0])
-#    print("REALNAME = ", row[1])
-#    print("PASSWORD = ", row[2], "\n")
+#    print("USERNAME =", row[0])
+#    print("REALNAME =", row[1])
+#    print("PASSWORD =", row[2], "\n")
 # print ("Operation done successfully")
 
 cur = conn.cursor()
-
-cur.execute("SELECT USERNAME FROM USERSDB WHERE USERNAME=?",[username])
-
+cur.execute("SELECT PASSWORD FROM USERSDB WHERE USERNAME=?",[username])
 result = cur.fetchone()
-
-print(*result)
-
-if "ADMIN" == str(*result):
-    print(True)
-else:
-    print(False)
+print(result)
+# if "ADMIN" == str(*result):
+#     print(True)
+# else:
+#     print(False)
 
 
 

@@ -38,13 +38,13 @@
                 <label for="password_input">Password: </label>
                 <input name="password" id="password_input" type="password">
             </div>
+            {% if error %}
+              <p class="red-text text-darken-4">{{error}}</p>
+            {% endif %}
             <button name="submit" type="submit" class="btn btn-primary blue-grey darken-3">Log In</button>
         </form>
         <h6>Not yet a member? <a href="/register" class="waves-effect waves-teal btn-flat">register here</a></h6>
       </div>
-      
-
-    
 
 </body>
 </html>

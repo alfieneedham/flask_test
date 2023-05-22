@@ -50,6 +50,9 @@
                 <label for="code_input">Access Code: </label>
                 <input name="accesscode" id="accesscode_input" type="text">
             </div>
+            {% if error %}
+              <p class="red-text text-darken-4">{{error}}</p>
+            {% endif %}
             <button name="submit" type="submit" class="btn btn-primary blue-grey darken-3">Register</button>
         </form>
         <h6>Already a member? <a href="/login" class="waves-effect waves-teal btn-flat">log in here</a></h6>

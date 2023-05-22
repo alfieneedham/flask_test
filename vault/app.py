@@ -26,8 +26,12 @@ class RegisterForm(FlaskForm):
 def index():
     username = session.get('username', None)
     if username is not None:
+        
+        cur = conn.cursor()
+        cur.execute("SELECT REALNAME FROM USERSDB WHERE USERNAME=?",[username])
+        result = cur.fetchone()[0] 
 
-        return(render_template("welcome.html", realname = "REALNAME"))
+        return(render_template("welcome.html", realname=result))
     else:
         return(redirect(url_for("login")))
 
@@ -40,6 +44,11 @@ def register():
         loggedin = True
 
     form=RegisterForm()
+    
+    errorpassword = "The passwords do not match."
+    erroraccesscode = "The access code is incorrect."
+    errorusername = "This username has already been taken."
+    
     if form.is_submitted():
         realname=form.realname.data
         username=form.username.data
@@ -47,29 +56,42 @@ def register():
         password2=form.password2.data
         accesscode=form.accesscode.data
         
-        if str(accesscode) == ACCESS_CODE and password == password2: 
-            cur = conn.cursor()
-            cur.execute('''SELECT USERNAME
-                        FROM USERSDB
-                        WHERE USERNAME=?''',
-                        [username])
-            result = cur.fetchone()
+        if str(accesscode) == ACCESS_CODE:
+            if password == password2: 
+                
+                cur = conn.cursor()
+                cur.execute('''SELECT USERNAME
+                            FROM USERSDB
+                            WHERE USERNAME=?''',
+                            [username])
+                result = cur.fetchone()
 
-            if not result:
-                conn.execute('''INSERT INTO USERSDB (USERNAME, REALNAME, PASSWORD)
-                                VALUES (?,?,?)''', [username, realname, password])
-                conn.commit()
-                return(redirect(url_for("login")))
+                if not result:
+                    conn.execute('''INSERT INTO USERSDB (USERNAME, REALNAME, PASSWORD)
+                                    VALUES (?,?,?)''', [username, realname, password])
+                    conn.commit()
+                    
+                    print("Successful registration. Name input:", realname, ";", "Username input:", username, ";", "Password input:", password)
+                    return redirect(url_for("login"))
+                
+                else:
+                    print("Registration failed. Username already taken. Username input:", username)
+                    return render_template("register.html", form=form, loggedin=loggedin, error=errorusername)
             
             else:
-                return(render_template("register.html", form=form, loggedin=loggedin))      
+                print("Registration failed. Password mismatch. Password input:", password, ";", "Password2 input:", password2)
+                return render_template("register.html", form=form, loggedin=loggedin, error=errorpassword)     
         else:
-            return(render_template("register.html", form=form, loggedin=loggedin))
+            print("Registration failed. Incorrect access code. Name input:", realname, ";", "Access code input:", accesscode, ";", "Expected access code:", ACCESS_CODE)
+            return render_template("register.html", form=form, loggedin=loggedin, error=erroraccesscode)
     else:
-        return(render_template("register.html", form=form, loggedin=loggedin))
+        return render_template("register.html", form=form, loggedin=loggedin)
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    
+    errormessage = "Username or password incorrect."
+    
     if session.get('username', None) is None:
         loggedin = False
     else:
@@ -79,22 +101,31 @@ def login():
     if form.is_submitted():
         username=form.username.data
         password=form.password.data
-        user_info = users.get(username, None)
 
-        # CHECK sqltest FOR LOGIN CHECK THING
-        # CHECK sqltest FOR LOGIN CHECK THING
-        # CHECK sqltest FOR LOGIN CHECK THING
+        cur = conn.cursor()
+        cur.execute("SELECT PASSWORD FROM USERSDB WHERE USERNAME=?",[username])
+        result = cur.fetchone()
 
-        if user_info is not None and user_info.password == password:
-            session["username"] = username
-            return(redirect(url_for("index")))
+        if result is not None:
+            if password == result[0]:
+                print("Login successful. User:", username)
+                session["username"] = username
+                return(redirect(url_for("index")))
+            
+            else:
+                print("Login unsuccessful. Username detected. Username input:", username, ";", "Password input:", password, ";", "Expected password:", result[0])
+                return render_template("login.html", form=form, loggedin=loggedin, error=errormessage)
+
         else:
-            return render_template("login.html", form=form, loggedin=loggedin)
+            print("Login unsuccessful. Username not detected. Username input:", username, ";", "Password input:", password)
+            return render_template("login.html", form=form, loggedin=loggedin, error=errormessage)
+        
     else:
-        return(render_template("login.html", form=form, loggedin=loggedin))
+        return render_template("login.html", form=form, loggedin=loggedin)
     
 @app.route("/logout")
 def logout():
+    print("User logged out. User:", session["username"])
     del session["username"]
     return(redirect(url_for("login")))
 
