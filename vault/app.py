@@ -1,19 +1,13 @@
 from flask import Flask, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
+import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='dgjsdfj6gfdj'
+conn = sqlite3.connect('vault/users.db')
 
 ACCESS_CODE = "42"
-
-users={}
-
-class User():
-    def __init__(self, realname, username, password):
-        self.realname = realname
-        self.username = username
-        self.password = password
         
 class LoginForm(FlaskForm):
     username = StringField("username")
@@ -32,9 +26,8 @@ class RegisterForm(FlaskForm):
 def index():
     username = session.get('username', None)
     if username is not None:
-        print(username)
-        print (users[username].realname)
-        return(render_template("welcome.html", realname = users[username].realname))
+
+        return(render_template("welcome.html", realname = "REALNAME"))
     else:
         return(redirect(url_for("login")))
 
@@ -52,10 +45,22 @@ def register():
         password2=form.password2.data
         accesscode=form.accesscode.data
         
-        if str(accesscode) == ACCESS_CODE and password == password2 and username not in users:
-            new_user = User(realname, username, password)
-            users[username] = new_user
-            return(redirect(url_for("login")))
+        if str(accesscode) == ACCESS_CODE and password == password2:
+            
+            cur = conn.cursor()
+            cur.execute('''SELECT USERNAME
+                            FROM USERSDB
+                            WHERE USERNAME=?''',
+                            (username))
+            result = cur.fetchone()
+
+            if not result:
+                conn.execute('''INSERT INTO USERSDB (USERNAME, REALNAME, PASSWORD)
+                                VALUES (?,?,?)''', [username, realname, password])
+                conn.commit()
+                return(redirect(url_for("login")))
+            else:
+                return(render_template("register.html", form=form, loggedin=loggedin))      
         else:
             return(render_template("register.html", form=form, loggedin=loggedin))
     else:
