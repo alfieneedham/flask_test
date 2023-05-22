@@ -113,11 +113,11 @@ def login():
                 return(redirect(url_for("index")))
             
             else:
-                print("Login unsuccessful. Username detected. Username input:", username, ";", "Password input:", password, ";", "Expected password:", result[0])
+                print("Login unsuccessful. Invalid username. Username input:", username, ";", "Password input:", password, ";", "Expected password:", result[0])
                 return render_template("login.html", form=form, loggedin=loggedin, error=errormessage)
 
         else:
-            print("Login unsuccessful. Username not detected. Username input:", username, ";", "Password input:", password)
+            print("Login unsuccessful. Incorrect password. Username input:", username, ";", "Password input:", password)
             return render_template("login.html", form=form, loggedin=loggedin, error=errormessage)
         
     else:
