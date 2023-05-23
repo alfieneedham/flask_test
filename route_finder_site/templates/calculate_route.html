@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate_Route</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <nav>
+        <div class="nav-wrapper teal accent-4">
+          <a href="/" class="brand-logo center">Not Google Maps</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="calculate_route.html">Path Finder</a></li>
+            <li><a href="modify_weight.html">Edit Weights</a></li>
+          </ul>
+        </div>
+      </nav>
+
+    <div class="container">
+        <form method="POST">
+            <div class="row">
+                <div class="input-field col s6">
+                    <select>
+                    <option value="" disabled selected>From:</option>
+                    <option value="A">Town A</option>
+                    <option value="B">Town B</option>
+                    <option value="C">Town C</option>
+                    </select>
+                </div>
+                <div class="input-field col s6">
+                    <select>
+                    <option value="" disabled selected>To:</option>
+                    <option value="A">Town A</option>
+                    <option value="B">Town B</option>
+                    <option value="C">Town C</option>
+                    </select>
+                </div>
+            </div>
+            <button name="submit" type="submit" class="btn btn-primary">Calculate</button>
+            <p>&nbsp;</p>
+        </form>
+    <img class="materialboxed center-align" width="650" src="../images/testimage.jpg">
+    <h5>&nbsp;</h5>
+    <div class="divider"></div>
+    <h5>Path:</h5>
+    <p>A, B, D...</p>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.materialboxed');
+            var instances = M.Materialbox.init(elems);
+         });
+     
+    </script>
+
+</body>
+</html>
