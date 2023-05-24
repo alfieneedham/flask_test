@@ -23,7 +23,15 @@ app.config['SECRET_KEY']='s9j4jfj8cnr98g'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return redirect(url_for('calculate_route'))
+
+@app.route('/calculate_route', methods=['GET','POST'])
+def calculate_route():
     return render_template("calculate_route.html")
+
+@app.route('/modify_weight', methods=['GET','POST'])
+def modify_weight():
+    return render_template("modify_weight.html")
 
 if __name__=="__main__":
     app.run()
