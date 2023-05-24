@@ -1,25 +1,29 @@
 from flask import Flask, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, SelectField
+from functions.dijkstras_algorithm import dijkstras_algorithm
 
-adjList = {"Aylesbury": [["Brighton", 0], ["Cambridge", 0], ["Dunstable", 0], ["Falmouth", 0]],
-        "Brighton": [["Ayelsbury", 0], ["Cambridge", 0]],
-        "Cambridge": [["Ayelsbury", 0], ["Brighton", 0], ["Eynsham", 0]],
-        "Dunstable": [["Ayelsbury", 0], ["Falmouth", 0], ["Huntingdon", 0], ["Ipswich", 0]],
-        "Eynsham": [["Cambridge", 0], ["Ipswich", 0]],
-        "Falmouth": [["Ayelsbury", 0], ["Dunstable"]],
-        "Grasmere": [["Huntingdon", 0]],
-        "Huntingdon": [["Dunstable", 0], ["Grasmere", 0], ["Ipswich", 0], ["Kensington", 0]],
-        "Ipswich": [["Dunstable", 0], ["Eynsham", 0], ["Jarrow", 0], ["Huntingdon", 0]],
-        "Jarrow": [["Ipswich", 0], ["Kensington", 0]],
-        "Kensington": [["Huntingdon", 0], ["Jarrow", 0], ["Longborough", 0]],
-        "Longborough": [["Kensington", 0]]}
+adjList = {"Aylesbury": [["Brighton", 1], ["Cambridge", 1], ["Dunstable", 1], ["Falmouth", 1]],
+        "Brighton": [["Aylesbury", 1], ["Cambridge", 1]],
+        "Cambridge": [["Aylesbury", 1], ["Brighton", 1], ["Eynsham", 1]],
+        "Dunstable": [["Aylesbury", 1], ["Falmouth", 1], ["Huntingdon", 1], ["Ipswich", 1]],
+        "Eynsham": [["Cambridge", 1], ["Ipswich", 1]],
+        "Falmouth": [["Aylesbury", 1], ["Dunstable"]],
+        "Grasmere": [["Huntingdon", 1]],
+        "Huntingdon": [["Dunstable", 1], ["Grasmere", 1], ["Ipswich", 1], ["Kensington", 1]],
+        "Ipswich": [["Dunstable", 1], ["Eynsham", 1], ["Jarrow", 1], ["Huntingdon", 1]],
+        "Jarrow": [["Ipswich", 1], ["Kensington", 1]],
+        "Kensington": [["Huntingdon", 1], ["Jarrow", 1], ["Longborough", 1]],
+        "Longborough": [["Kensington", 1]]}
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='s9j4jfj8cnr98g'
 
-# class RouteForm(FlaskForm):
-#     town1 = 
+class RouteForm(FlaskForm):
+    startnode = SelectField("startnode")
+    endnode = SelectField("endnode")
+    submit = SubmitField("submit")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -27,11 +31,22 @@ def index():
 
 @app.route('/calculate_route', methods=['GET','POST'])
 def calculate_route():
-    return render_template("calculate_route.html")
+    form = RouteForm()
+    
+    if form.is_submitted():
+        startnode=form.startnode.data
+        endnode=form.endnode.data
+        print(startnode, endnode)
+        return render_template("calculate_route.html")
+    else:
+        return render_template("calculate_route.html")
 
 @app.route('/modify_weight', methods=['GET','POST'])
 def modify_weight():
     return render_template("modify_weight.html")
 
 if __name__=="__main__":
-    app.run()
+    result = dijkstras_algorithm(adjList, "Aylesbury", "Ipswich")
+    print("")
+    print("Path: ", result)
+    #app.run()
