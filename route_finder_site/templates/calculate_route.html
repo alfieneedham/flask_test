@@ -29,28 +29,32 @@
                 <div class="input-field col s6">
                     <select name="startnode">
                     <option value="" disabled selected>From:</option>
-                    <option value="A">Town A</option>
-                    <option value="B">Town B</option>
-                    <option value="C">Town C</option>
+                    {% for town in towns %}
+                        <option value={{town}}>{{town}}</option>
+                    {% endfor %}
                     </select>
                 </div>
                 <div class="input-field col s6">
                     <select name="endnode">
                     <option value="" disabled selected>To:</option>
-                    <option value="A">Town A</option>
-                    <option value="B">Town B</option>
-                    <option value="C">Town C</option>
+                    {% for town in towns %}
+                        <option value={{town}}>{{town}}</option>
+                    {% endfor %}
                     </select>
                 </div>
             </div>
             <button name="submit" type="submit" class="btn btn-primary">Calculate</button>
             <p>&nbsp;</p>
         </form>
-    <img class="materialboxed" width="650" src="../route_finder_site/images/testimage.jpg">
+    <img class="materialboxed" width="450" src="../route_finder_site/images/testimage.jpg">
     <h5>&nbsp;</h5>
     <div class="divider"></div>
-    <h5>Path:</h5>
-    <p>A, B, D...</p>
+    {% if route %}
+        <h5>Route:</h5>
+        <p>{{route}}</p>
+        <h5>Distance:</h5>
+        <p>{{distance}}</p>
+    {% endif %}
     </div>
 
     <script>

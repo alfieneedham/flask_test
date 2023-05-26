@@ -8,6 +8,8 @@ def dijkstras_algorithm(graph, start, destination):
             if vertices[i][0] == vertex:
                 return(i)
             
+    path = []
+            
     queue = NaivePriorityQueue()
     vertices = []
     for vertex in graph:
@@ -16,26 +18,26 @@ def dijkstras_algorithm(graph, start, destination):
 
     vertices[find_index(start)][2] = start
     vertices[find_index(start)][3] = 0
-    queue.enqueue(start, 0)
+    queue.enqueue(vertices[find_index(start)], 0)
     
-    # while queue.is_empty() == False:
-    #     currentVertex = queue.dequeue()
-    #     for neighbour in currentVertex[0].neighbours:
-    #         if vertices[find_index(currentVertex[0])][2] + neighbour[1] < vertices[find_index(neighbour[0])][2]:
-    #             vertices[find_index(neighbour[0])][2] = vertices[find_index(currentVertex[0])][2] + neighbour[1]
-    #             vertices[find_index(neighbour[0])][1] = currentVertex[0]
-    #             queue.enqueue(neighbour[0], vertices[find_index(currentVertex[0])][2] + neighbour[1])  
+    while queue.is_empty() == False:
+        currentVertex = queue.dequeue()
+        for neighbour in vertices[find_index(currentVertex[0][0])][1]:
+            if vertices[find_index(currentVertex[0][0])][3] + neighbour[1] < vertices[find_index(neighbour[0])][3]:
+                vertices[find_index(neighbour[0])][3] = vertices[find_index(currentVertex[0][0])][3] + neighbour[1]
+                vertices[find_index(neighbour[0])][2] = currentVertex[0][0]
+                queue.enqueue(vertices[find_index(neighbour[0])], vertices[find_index(currentVertex[0][0])][3] + neighbour[1])  
                    
-    # currentVertex = vertices[find_index(destination)]
-    # distance = currentVertex[2]
-    # while currentVertex[0] != start:
-    #     try:
-    #         path.append(currentVertex[0])
-    #         currentVertex = vertices[find_index(currentVertex[1])]
-    #     except:
-    #         print("No valid path.")
-    #         quit()
+    currentVertex = vertices[find_index(destination)]
+    distance = currentVertex[3]
+    while currentVertex[0] != start:
+        try:
+            path.append(currentVertex[0])
+            currentVertex = vertices[find_index(currentVertex[2])]
+        except:
+            print("No valid path.")
+            quit()
             
-    # path.append(start)
-    # reversedPath = reversed(path)
-    # return(reversedPath, distance)
+    path.append(start)
+    path.reverse()
+    return(path, distance)
